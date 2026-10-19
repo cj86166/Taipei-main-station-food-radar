@@ -1,0 +1,369 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>台北車站美食雷達</title>
+  <style>
+    :root {
+      --pink: #ff5e78;
+      --yellow: #ffda57;
+      --green: #a8e6cf;
+      --purple: #e9e2ff;
+      --ink: #302746;
+      --bg: #fff9f2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, "Microsoft JhengHei", sans-serif;
+    }
+
+    header {
+      background: var(--pink);
+      color: white;
+      padding: 42px 20px;
+      border-radius: 0 0 28px 28px;
+    }
+
+    .hero, main {
+      max-width: 760px;
+      margin: auto;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--ink);
+      border-radius: 30px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h1 { font-size: clamp(32px, 7vw, 48px); margin: 18px 0 8px; }
+    h2 { font-size: 21px; margin-top: 0; }
+    p { line-height: 1.7; }
+
+    main { padding: 24px 16px 50px; }
+
+    .panel {
+      background: white;
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 5px 24px #3027460a;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #e5ddeb;
+      border-radius: 12px;
+      font: inherit;
+      background: #fffdfd;
+    }
+
+    input:focus {
+      outline: 2px solid var(--purple);
+      border-color: #9878df;
+    }
+
+    .stars { display: flex; gap: 8px; }
+
+    .star {
+      flex: 1;
+      padding: 10px 2px;
+      border: 0;
+      border-radius: 12px;
+      background: #f2edf6;
+      color: #b9afc5;
+      font-size: 27px;
+      cursor: pointer;
+    }
+
+    .star.active {
+      background: var(--yellow);
+      color: #8a6200;
+    }
+
+    button { font: inherit; cursor: pointer; }
+
+    .submit {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      background: var(--pink);
+      color: white;
+      border: 0;
+      border-radius: 13px;
+      font-weight: 700;
+    }
+
+    .submit:disabled { opacity: .6; cursor: wait; }
+
+    .message { font-size: 14px; white-space: pre-wrap; }
+    .status { color: #655675; font-size: 13px; }
+    .list { display: grid; gap: 14px; }
+
+    .food-card {
+      background: white;
+      padding: 18px;
+      border-radius: 17px;
+      border: 1px solid #f0e8f4;
+      overflow-wrap: anywhere;
+    }
+
+    .food-card h3 { margin: 0 0 8px; }
+    .food-card p { margin: 6px 0; }
+    .rating { color: #bd8500; letter-spacing: 2px; }
+    .empty { background: var(--purple); padding: 24px; border-radius: 16px; }
+
+    footer { text-align: center; padding: 20px; color: #82768a; font-size: 13px; }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="hero">
+      <span class="tag">FOOD GUIDE · TAIPEI</span>
+      <h1>台北車站<br>美食雷達！</h1>
+      <p>今天吃什麼？一起分享口袋名單，<br>挖掘台北車站周邊的美味！</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>✨ 分享你的口袋美食</h2>
+      <form id="foodForm">
+        <label for="restaurant">餐廳名稱</label>
+        <input id="restaurant" maxlength="100"
+          placeholder="例如：某某牛肉麵" required>
+
+        <label>推薦程度</label>
+        <div class="stars" id="starPicker" aria-label="選擇推薦星級">
+          <button type="button" class="star" data-rating="1"
+            aria-label="1 顆星" aria-pressed="false">★</button>
+          <button type="button" class="star" data-rating="2"
+            aria-label="2 顆星" aria-pressed="false">★</button>
+          <button type="button" class="star" data-rating="3"
+            aria-label="3 顆星" aria-pressed="false">★</button>
+          <button type="button" class="star" data-rating="4"
+            aria-label="4 顆星" aria-pressed="false">★</button>
+          <button type="button" class="star active" data-rating="5"
+            aria-label="5 顆星" aria-pressed="true">★</button>
+        </div>
+        <p id="ratingText" class="status">5 顆星・必吃口袋名單</p>
+
+        <label for="dish">推薦料理</label>
+        <input id="dish" maxlength="200"
+          placeholder="例如：招牌牛肉麵" required>
+
+        <button class="submit" id="submitBtn" type="submit">
+          ＋ 新增美食推薦
+        </button>
+        <p id="formMessage" class="message" role="status"></p>
+      </form>
+    </section>
+
+    <section>
+      <h2>🍜 大家的美食口袋名單</h2>
+      <p class="status" id="connectionStatus">正在連接雲端資料庫……</p>
+      <div id="foodList" class="list">
+        <div class="empty">正在載入美食推薦……</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>GOOD FOOD, GOOD MOOD ✳ 台北車站美食指南</footer>
+
+  <script type="module">
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      onSnapshot,
+      query,
+      orderBy,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    // 你的 Firebase 專案設定
+    const firebaseConfig = {
+      apiKey: "AIzaSyD1h8lKs_uUq3xcU0Hb9WGSJ7KIVqemn34",
+      authDomain: "test-d615e.firebaseapp.com",
+      projectId: "test-d615e",
+      storageBucket: "test-d615e.firebasestorage.app",
+      messagingSenderId: "719884173005",
+      appId: "1:719884173005:web:14b04acb937fa3b5ab3384"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const restaurantsRef = collection(db, "restaurants");
+
+    const form = document.getElementById("foodForm");
+    const restaurantInput = document.getElementById("restaurant");
+    const dishInput = document.getElementById("dish");
+    const submitBtn = document.getElementById("submitBtn");
+    const formMessage = document.getElementById("formMessage");
+    const foodList = document.getElementById("foodList");
+    const connectionStatus = document.getElementById("connectionStatus");
+    const ratingText = document.getElementById("ratingText");
+
+    let selectedRating = 5;
+
+    const ratingLabels = {
+      1: "有待加強",
+      2: "普通",
+      3: "值得一試",
+      4: "非常推薦",
+      5: "必吃口袋名單"
+    };
+
+    function setRating(value) {
+      selectedRating = value;
+
+      document.querySelectorAll(".star").forEach(button => {
+        const active = Number(button.dataset.rating) <= value;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed",
+          String(Number(button.dataset.rating) === value));
+      });
+
+      ratingText.textContent =
+        `${value} 顆星・${ratingLabels[value]}`;
+    }
+
+    document.getElementById("starPicker")
+      .addEventListener("click", event => {
+        const button = event.target.closest("[data-rating]");
+        if (button) setRating(Number(button.dataset.rating));
+      });
+
+    function showMessage(message, isError = false) {
+      formMessage.textContent = message;
+      formMessage.style.color = isError ? "#c62849" : "#27805d";
+    }
+
+    // 使用 textContent 顯示使用者輸入，避免把文字當作 HTML 執行。
+    function renderRestaurants(restaurants) {
+      foodList.replaceChildren();
+
+      if (restaurants.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent =
+          "目前還沒有推薦，成為第一個分享美食的人吧！";
+        foodList.append(empty);
+        return;
+      }
+
+      restaurants.forEach(item => {
+        const card = document.createElement("article");
+        card.className = "food-card";
+
+        const title = document.createElement("h3");
+        title.textContent = `🍴 ${item.restaurant}`;
+
+        const dish = document.createElement("p");
+        dish.textContent = `推薦料理：${item.dish}`;
+
+        const rating = document.createElement("p");
+        rating.className = "rating";
+        rating.textContent =
+          "★".repeat(item.rating) + "☆".repeat(5 - item.rating);
+
+        const score = document.createElement("p");
+        score.className = "status";
+        score.textContent = `${item.rating} / 5 顆星`;
+
+        card.append(title, dish, rating, score);
+        foodList.append(card);
+      });
+    }
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const restaurant = restaurantInput.value.trim();
+      const dish = dishInput.value.trim();
+
+      if (!restaurant || !dish) {
+        showMessage("請填寫餐廳名稱和推薦料理。", true);
+        return;
+      }
+
+      if (restaurant.length > 100 || dish.length > 200) {
+        showMessage("餐廳名稱或料理內容太長了。", true);
+        return;
+      }
+
+      submitBtn.disabled = true;
+      showMessage("正在儲存推薦……");
+
+      try {
+        await addDoc(restaurantsRef, {
+          restaurant,
+          rating: selectedRating,
+          dish,
+          createdAt: serverTimestamp()
+        });
+
+        form.reset();
+        setRating(5);
+        showMessage("新增成功！大家都可以看到這筆推薦。");
+      } catch (error) {
+        console.error("新增推薦失敗：", error);
+        showMessage(
+          "儲存失敗，請確認 Firestore 已建立並設定安全規則。",
+          true
+        );
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    // 即時監聽雲端資料，其他訪客新增後也會更新。
+    const restaurantsQuery = query(
+      restaurantsRef,
+      orderBy("createdAt", "desc")
+    );
+
+    onSnapshot(restaurantsQuery, snapshot => {
+      const restaurants = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      renderRestaurants(restaurants);
+      connectionStatus.textContent =
+        `雲端同步正常・共 ${restaurants.length} 則推薦`;
+    }, error => {
+      console.error("讀取推薦失敗：", error);
+      connectionStatus.textContent =
+        "目前無法讀取資料，請檢查資料庫設定與安全規則。";
+      foodList.replaceChildren();
+
+      const message = document.createElement("div");
+      message.className = "empty";
+      message.textContent = "資料載入失敗，請稍後再試。";
+      foodList.append(message);
+    });
+  </script>
+</body>
+</html>
