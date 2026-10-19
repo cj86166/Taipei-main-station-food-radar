@@ -4,205 +4,505 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>台北車站美食雷達</title>
+  <title>台北車站美食雷達 🍜</title>
+  <meta name="description" content="和朋友一起分享台北車站商圈的美食、必吃料理與真實推薦。">
+
   <style>
     :root {
-      --pink: #ff5e78;
-      --yellow: #ffda57;
-      --green: #a8e6cf;
-      --purple: #e9e2ff;
-      --ink: #302746;
-      --bg: #fff9f2;
+      --pink: #ff7ca8;
+      --yellow: #ffe66d;
+      --mint: #b8f2e6;
+      --purple: #cdb4db;
+      --ink: #342d40;
+      --muted: #777184;
+      --paper: #fffaf5;
+      --white: #ffffff;
+      --border: #eee4ed;
+      --shadow: 0 8px 24px rgba(78, 48, 87, 0.08);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
-      background: var(--bg);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background:
+        radial-gradient(circle at 10% 5%, #ffe3ed 0, transparent 25%),
+        radial-gradient(circle at 95% 15%, #e5ddff 0, transparent 24%),
+        var(--paper);
       color: var(--ink);
-      font-family: system-ui, "Microsoft JhengHei", sans-serif;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: min(100% - 32px, 1050px);
+      margin: 0 auto;
     }
 
     header {
-      background: var(--pink);
-      color: white;
-      padding: 42px 20px;
-      border-radius: 0 0 28px 28px;
+      padding: 42px 0 28px;
+      text-align: center;
     }
 
-    .hero, main {
-      max-width: 760px;
-      margin: auto;
-    }
-
-    .tag {
+    .eyebrow {
       display: inline-block;
       background: var(--yellow);
-      color: var(--ink);
-      border-radius: 30px;
-      padding: 6px 12px;
+      padding: 5px 14px;
+      border-radius: 999px;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
+      transform: rotate(-2deg);
     }
 
-    h1 { font-size: clamp(32px, 7vw, 48px); margin: 18px 0 8px; }
-    h2 { font-size: 21px; margin-top: 0; }
-    p { line-height: 1.7; }
+    h1 {
+      font-size: clamp(30px, 5vw, 46px);
+      line-height: 1.2;
+      margin: 18px 0 10px;
+      letter-spacing: 1px;
+    }
 
-    main { padding: 24px 16px 50px; }
+    .subtitle {
+      margin: 0 auto;
+      max-width: 580px;
+      color: var(--muted);
+    }
+
+    .section-title {
+      font-size: 23px;
+      margin: 0 0 18px;
+    }
 
     .panel {
-      background: white;
-      border-radius: 22px;
-      padding: 24px;
-      margin-bottom: 22px;
-      box-shadow: 0 5px 24px #3027460a;
+      background: rgba(255, 255, 255, 0.92);
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      padding: clamp(18px, 4vw, 30px);
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
     }
 
     label {
       display: block;
-      margin: 18px 0 8px;
-      font-weight: 700;
+      font-weight: 800;
+      margin-bottom: 7px;
+      font-size: 14px;
     }
 
-    input {
+    .required {
+      color: #e64d83;
+      margin-left: 4px;
+    }
+
+    input,
+    textarea {
       width: 100%;
-      padding: 13px 14px;
-      border: 1px solid #e5ddeb;
-      border-radius: 12px;
+      border: 2px solid #eee5ef;
+      border-radius: 13px;
+      background: #fff;
+      padding: 12px 14px;
       font: inherit;
-      background: #fffdfd;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    input:focus {
-      outline: 2px solid var(--purple);
-      border-color: #9878df;
+    input:focus,
+    textarea:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(205, 180, 219, 0.2);
     }
 
-    .stars { display: flex; gap: 8px; }
+    textarea {
+      resize: vertical;
+      min-height: 88px;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .stars {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
     .star {
-      flex: 1;
-      padding: 10px 2px;
       border: 0;
+      background: #f3edf5;
+      color: #c7bdce;
       border-radius: 12px;
-      background: #f2edf6;
-      color: #b9afc5;
-      font-size: 27px;
+      font-size: 30px;
+      width: 48px;
+      height: 48px;
       cursor: pointer;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .star:hover {
+      transform: translateY(-2px);
     }
 
     .star.active {
-      background: var(--yellow);
-      color: #8a6200;
+      background: #fff0a8;
+      color: #f5a623;
     }
 
-    button { font: inherit; cursor: pointer; }
+    #ratingText {
+      color: var(--muted);
+      font-size: 13px;
+      margin-left: 4px;
+    }
 
-    .submit {
-      width: 100%;
+    .submit-row {
       margin-top: 22px;
-      padding: 14px;
-      background: var(--pink);
-      color: white;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .submit-btn {
       border: 0;
-      border-radius: 13px;
+      border-radius: 14px;
+      background: var(--pink);
+      color: #fff;
+      padding: 13px 25px;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #e65d8b;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 #e65d8b;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: wait;
+      transform: none;
+    }
+
+    #formMessage {
+      font-size: 14px;
       font-weight: 700;
     }
 
-    .submit:disabled { opacity: .6; cursor: wait; }
-
-    .message { font-size: 14px; white-space: pre-wrap; }
-    .status { color: #655675; font-size: 13px; }
-    .list { display: grid; gap: 14px; }
-
-    .food-card {
-      background: white;
-      padding: 18px;
-      border-radius: 17px;
-      border: 1px solid #f0e8f4;
-      overflow-wrap: anywhere;
+    .list-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
     }
 
-    .food-card h3 { margin: 0 0 8px; }
-    .food-card p { margin: 6px 0; }
-    .rating { color: #bd8500; letter-spacing: 2px; }
-    .empty { background: var(--purple); padding: 24px; border-radius: 16px; }
+    .count {
+      background: var(--mint);
+      border-radius: 999px;
+      padding: 6px 13px;
+      font-size: 13px;
+      font-weight: 800;
+    }
 
-    footer { text-align: center; padding: 20px; color: #82768a; font-size: 13px; }
+    .restaurant-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .restaurant-card {
+      position: relative;
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      overflow-wrap: anywhere;
+      box-shadow: var(--shadow);
+    }
+
+    .restaurant-card:nth-child(4n + 1) {
+      border-top: 5px solid var(--pink);
+    }
+
+    .restaurant-card:nth-child(4n + 2) {
+      border-top: 5px solid var(--yellow);
+    }
+
+    .restaurant-card:nth-child(4n + 3) {
+      border-top: 5px solid var(--mint);
+    }
+
+    .restaurant-card:nth-child(4n + 4) {
+      border-top: 5px solid var(--purple);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .restaurant-name {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.4;
+    }
+
+    .rating {
+      white-space: nowrap;
+      color: #efa900;
+      font-size: 15px;
+      letter-spacing: -1px;
+    }
+
+    .card-info {
+      margin-top: 17px;
+      display: grid;
+      gap: 11px;
+    }
+
+    .info-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .info-value {
+      white-space: pre-wrap;
+      font-size: 15px;
+    }
+
+    .dish-tag {
+      display: inline-block;
+      background: #fff2bf;
+      border-radius: 8px;
+      padding: 3px 9px;
+      font-weight: 800;
+    }
+
+    .price {
+      color: #d84c7d;
+      font-weight: 900;
+    }
+
+    .collected-time {
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px dashed #e8dfe9;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 42px 18px;
+      border: 2px dashed #e4d9e8;
+      border-radius: 20px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.7);
+    }
+
+    .empty .emoji {
+      font-size: 38px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 12px 0 35px;
+    }
+
+    @media (max-width: 650px) {
+      .form-grid,
+      .restaurant-list {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding-top: 30px;
+      }
+
+      .panel {
+        border-radius: 18px;
+      }
+
+      .star {
+        width: 43px;
+        height: 43px;
+        font-size: 27px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <header>
-    <div class="hero">
-      <span class="tag">FOOD GUIDE · TAIPEI</span>
-      <h1>台北車站<br>美食雷達！</h1>
-      <p>今天吃什麼？一起分享口袋名單，<br>挖掘台北車站周邊的美味！</p>
+    <div class="container">
+      <span class="eyebrow">TAIPEI FOOD RADAR ✦</span>
+      <h1>台北車站美食雷達 🍜</h1>
+      <p class="subtitle">
+        好吃的店，不藏私！和朋友一起分享台北車站商圈的口袋名單，
+        下一餐就跟著大家的推薦吃。
+      </p>
     </div>
   </header>
 
-  <main>
+  <main class="container">
     <section class="panel">
-      <h2>✨ 分享你的口袋美食</h2>
-      <form id="foodForm">
-        <label for="restaurant">餐廳名稱</label>
-        <input id="restaurant" maxlength="100"
-          placeholder="例如：某某牛肉麵" required>
+      <h2 class="section-title">📍 分享你的口袋美食</h2>
 
-        <label>推薦程度</label>
-        <div class="stars" id="starPicker" aria-label="選擇推薦星級">
-          <button type="button" class="star" data-rating="1"
-            aria-label="1 顆星" aria-pressed="false">★</button>
-          <button type="button" class="star" data-rating="2"
-            aria-label="2 顆星" aria-pressed="false">★</button>
-          <button type="button" class="star" data-rating="3"
-            aria-label="3 顆星" aria-pressed="false">★</button>
-          <button type="button" class="star" data-rating="4"
-            aria-label="4 顆星" aria-pressed="false">★</button>
-          <button type="button" class="star active" data-rating="5"
-            aria-label="5 顆星" aria-pressed="true">★</button>
+      <form id="restaurantForm">
+        <div class="form-grid">
+          <div class="field">
+            <label for="recommender">美食推薦人<span class="required">*</span></label>
+            <input
+              id="recommender"
+              name="recommender"
+              type="text"
+              maxlength="50"
+              placeholder="例如：小明"
+              autocomplete="name"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label for="restaurant">餐廳名稱<span class="required">*</span></label>
+            <input
+              id="restaurant"
+              name="restaurant"
+              type="text"
+              maxlength="100"
+              placeholder="例如：阜杭豆漿"
+              required
+            >
+          </div>
+
+          <div class="field full">
+            <label>推薦星等<span class="required">*</span></label>
+            <div class="stars" id="starPicker" aria-label="選擇推薦星等">
+              <button class="star" type="button" data-rating="1" aria-label="1 星" aria-pressed="false">★</button>
+              <button class="star" type="button" data-rating="2" aria-label="2 星" aria-pressed="false">★</button>
+              <button class="star" type="button" data-rating="3" aria-label="3 星" aria-pressed="false">★</button>
+              <button class="star" type="button" data-rating="4" aria-label="4 星" aria-pressed="false">★</button>
+              <button class="star" type="button" data-rating="5" aria-label="5 星" aria-pressed="false">★</button>
+              <span id="ratingText">請選擇星等</span>
+            </div>
+          </div>
+
+          <div class="field full">
+            <label for="dish">推薦料理<span class="required">*</span></label>
+            <input
+              id="dish"
+              name="dish"
+              type="text"
+              maxlength="200"
+              placeholder="例如：厚燒餅、蛋餅、招牌牛肉麵"
+              required
+            >
+          </div>
+
+          <div class="field full">
+            <label for="reason">推薦原因<span class="required">*</span></label>
+            <textarea
+              id="reason"
+              name="reason"
+              maxlength="500"
+              placeholder="例如：份量十足、價格實惠、交通方便，或是湯頭很有特色……"
+              required
+            ></textarea>
+          </div>
+
+          <div class="field full">
+            <label for="price">推薦餐點的價格（新台幣）<span class="required">*</span></label>
+            <input
+              id="price"
+              name="price"
+              type="number"
+              min="0"
+              max="1000000"
+              step="1"
+              inputmode="numeric"
+              placeholder="例如：150"
+              required
+            >
+            <div class="hint">請填寫推薦餐點的價格，單位為新台幣元。</div>
+          </div>
         </div>
-        <p id="ratingText" class="status">5 顆星・必吃口袋名單</p>
 
-        <label for="dish">推薦料理</label>
-        <input id="dish" maxlength="200"
-          placeholder="例如：招牌牛肉麵" required>
-
-        <button class="submit" id="submitBtn" type="submit">
-          ＋ 新增美食推薦
-        </button>
-        <p id="formMessage" class="message" role="status"></p>
+        <div class="submit-row">
+          <button class="submit-btn" id="submitBtn" type="submit">送出美食推薦 ✨</button>
+          <span id="formMessage" role="status" aria-live="polite"></span>
+        </div>
       </form>
     </section>
 
     <section>
-      <h2>🍜 大家的美食口袋名單</h2>
-      <p class="status" id="connectionStatus">正在連接雲端資料庫……</p>
-      <div id="foodList" class="list">
-        <div class="empty">正在載入美食推薦……</div>
+      <div class="list-heading">
+        <h2 class="section-title" style="margin:0">🍽️ 大家的美食名單</h2>
+        <span class="count" id="restaurantCount">共 0 間推薦</span>
+      </div>
+
+      <div class="restaurant-list" id="restaurantList" aria-live="polite">
+        <div class="empty">
+          <span class="emoji">🍜</span>
+          <strong>美食雷達準備中……</strong>
+          <div>正在讀取大家分享的口袋名單。</div>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer>GOOD FOOD, GOOD MOOD ✳ 台北車站美食指南</footer>
+  <footer class="container">
+    一起發掘台北車站周邊的好味道 💛
+    <br>
+    資料蒐集時間以台灣時間（UTC+8）顯示。
+  </footer>
 
   <script type="module">
-    import { initializeApp }
-      from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
     import {
       getFirestore,
       collection,
       addDoc,
-      onSnapshot,
+      serverTimestamp,
       query,
       orderBy,
-      serverTimestamp
+      onSnapshot
     } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-    // 你的 Firebase 專案設定
     const firebaseConfig = {
       apiKey: "AIzaSyD1h8lKs_uUq3xcU0Hb9WGSJ7KIVqemn34",
       authDomain: "test-d615e.firebaseapp.com",
@@ -216,154 +516,241 @@
     const db = getFirestore(app);
     const restaurantsRef = collection(db, "restaurants");
 
-    const form = document.getElementById("foodForm");
-    const restaurantInput = document.getElementById("restaurant");
-    const dishInput = document.getElementById("dish");
+    const form = document.getElementById("restaurantForm");
     const submitBtn = document.getElementById("submitBtn");
     const formMessage = document.getElementById("formMessage");
-    const foodList = document.getElementById("foodList");
-    const connectionStatus = document.getElementById("connectionStatus");
+    const restaurantList = document.getElementById("restaurantList");
+    const restaurantCount = document.getElementById("restaurantCount");
     const ratingText = document.getElementById("ratingText");
+    const starButtons = [...document.querySelectorAll(".star")];
 
-    let selectedRating = 5;
-
-    const ratingLabels = {
-      1: "有待加強",
-      2: "普通",
-      3: "值得一試",
-      4: "非常推薦",
-      5: "必吃口袋名單"
-    };
+    let selectedRating = 0;
 
     function setRating(value) {
       selectedRating = value;
 
-      document.querySelectorAll(".star").forEach(button => {
+      starButtons.forEach((button) => {
         const active = Number(button.dataset.rating) <= value;
         button.classList.toggle("active", active);
         button.setAttribute("aria-pressed",
           String(Number(button.dataset.rating) === value));
       });
 
-      ratingText.textContent =
-        `${value} 顆星・${ratingLabels[value]}`;
+      ratingText.textContent = value
+        ? `${value} 星${"★".repeat(value)}`
+        : "請選擇星等";
     }
 
-    document.getElementById("starPicker")
-      .addEventListener("click", event => {
-        const button = event.target.closest("[data-rating]");
-        if (button) setRating(Number(button.dataset.rating));
+    starButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        setRating(Number(button.dataset.rating));
+      });
+    });
+
+    // 將 Firebase 時間格式化為台灣時間：YYYY/MM/DD HH:mm
+    function formatTaiwanTime(timestamp) {
+      if (!timestamp || typeof timestamp.toDate !== "function") {
+        return "時間資料尚未提供";
+      }
+
+      const date = timestamp.toDate();
+
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Taipei",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23"
+      }).formatToParts(date);
+
+      const values = {};
+      parts.forEach((part) => {
+        if (part.type !== "literal") {
+          values[part.type] = part.value;
+        }
       });
 
-    function showMessage(message, isError = false) {
-      formMessage.textContent = message;
-      formMessage.style.color = isError ? "#c62849" : "#27805d";
+      return `${values.year}/${values.month}/${values.day} ${values.hour}:${values.minute}`;
     }
 
-    // 使用 textContent 顯示使用者輸入，避免把文字當作 HTML 執行。
-    function renderRestaurants(restaurants) {
-      foodList.replaceChildren();
+    function createInfo(label, value, extraClass = "") {
+      const wrapper = document.createElement("div");
 
-      if (restaurants.length === 0) {
+      const title = document.createElement("span");
+      title.className = "info-label";
+      title.textContent = label;
+
+      const content = document.createElement("div");
+      content.className = `info-value ${extraClass}`.trim();
+      content.textContent = value;
+
+      wrapper.append(title, content);
+      return wrapper;
+    }
+
+    function renderRestaurants(snapshot) {
+      restaurantList.replaceChildren();
+      restaurantCount.textContent = `共 ${snapshot.size} 間推薦`;
+
+      if (snapshot.empty) {
         const empty = document.createElement("div");
         empty.className = "empty";
-        empty.textContent =
-          "目前還沒有推薦，成為第一個分享美食的人吧！";
-        foodList.append(empty);
+
+        const emoji = document.createElement("span");
+        emoji.className = "emoji";
+        emoji.textContent = "🍜";
+
+        const title = document.createElement("strong");
+        title.textContent = "目前還沒有美食推薦";
+
+        const hint = document.createElement("div");
+        hint.textContent = "成為第一位分享美食的人吧！";
+
+        empty.append(emoji, title, hint);
+        restaurantList.appendChild(empty);
         return;
       }
 
-      restaurants.forEach(item => {
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
         const card = document.createElement("article");
-        card.className = "food-card";
+        card.className = "restaurant-card";
 
-        const title = document.createElement("h3");
-        title.textContent = `🍴 ${item.restaurant}`;
+        const top = document.createElement("div");
+        top.className = "card-top";
 
-        const dish = document.createElement("p");
-        dish.textContent = `推薦料理：${item.dish}`;
+        const name = document.createElement("h3");
+        name.className = "restaurant-name";
+        name.textContent = data.restaurant || "未命名餐廳";
 
-        const rating = document.createElement("p");
+        const rating = document.createElement("div");
         rating.className = "rating";
+        const score = Number(data.rating) || 0;
         rating.textContent =
-          "★".repeat(item.rating) + "☆".repeat(5 - item.rating);
+          "★".repeat(Math.max(0, Math.min(5, score))) +
+          "☆".repeat(5 - Math.max(0, Math.min(5, score)));
+        rating.setAttribute("aria-label", `${score} 星評分`);
 
-        const score = document.createElement("p");
-        score.className = "status";
-        score.textContent = `${item.rating} / 5 顆星`;
+        top.append(name, rating);
 
-        card.append(title, dish, rating, score);
-        foodList.append(card);
+        const info = document.createElement("div");
+        info.className = "card-info";
+
+        info.appendChild(createInfo(
+          "🙋 美食推薦人",
+          data.recommender || "尚未提供"
+        ));
+
+        const dish = createInfo(
+          "🥢 推薦料理",
+          data.dish || "尚未提供"
+        );
+        dish.querySelector(".info-value").classList.add("dish-tag");
+        info.appendChild(dish);
+
+        info.appendChild(createInfo(
+          "💬 推薦原因",
+          data.reason || "尚未提供"
+        ));
+
+        const priceText =
+          data.price !== undefined && data.price !== null && data.price !== ""
+            ? `NT$ ${Number(data.price).toLocaleString("zh-TW")}`
+            : "尚未提供";
+
+        info.appendChild(createInfo("💰 推薦餐點價格", priceText, "price"));
+
+        const time = document.createElement("div");
+        time.className = "collected-time";
+        time.textContent = `🕒 資料蒐集時間：${formatTaiwanTime(data.createdAt)}`;
+
+        card.append(top, info, time);
+        restaurantList.appendChild(card);
       });
     }
 
-    form.addEventListener("submit", async event => {
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
-      const restaurant = restaurantInput.value.trim();
-      const dish = dishInput.value.trim();
+      const recommender = document.getElementById("recommender").value.trim();
+      const restaurant = document.getElementById("restaurant").value.trim();
+      const dish = document.getElementById("dish").value.trim();
+      const reason = document.getElementById("reason").value.trim();
+      const priceValue = document.getElementById("price").value;
 
-      if (!restaurant || !dish) {
-        showMessage("請填寫餐廳名稱和推薦料理。", true);
+      if (!selectedRating) {
+        formMessage.textContent = "請先選擇 1～5 星評分。";
+        formMessage.style.color = "#d84c7d";
         return;
       }
 
-      if (restaurant.length > 100 || dish.length > 200) {
-        showMessage("餐廳名稱或料理內容太長了。", true);
+      if (!recommender || !restaurant || !dish || !reason || priceValue === "") {
+        formMessage.textContent = "請完整填寫所有欄位。";
+        formMessage.style.color = "#d84c7d";
+        return;
+      }
+
+      const price = Number(priceValue);
+
+      if (!Number.isFinite(price) || price < 0 || price > 1000000) {
+        formMessage.textContent = "請輸入有效的餐點價格。";
+        formMessage.style.color = "#d84c7d";
         return;
       }
 
       submitBtn.disabled = true;
-      showMessage("正在儲存推薦……");
+      formMessage.textContent = "正在儲存你的推薦……";
+      formMessage.style.color = "#777184";
 
       try {
         await addDoc(restaurantsRef, {
+          recommender,
           restaurant,
           rating: selectedRating,
           dish,
+          reason,
+          price,
           createdAt: serverTimestamp()
         });
 
         form.reset();
-        setRating(5);
-        showMessage("新增成功！大家都可以看到這筆推薦。");
+        setRating(0);
+
+        formMessage.textContent = "推薦成功！已同步到美食名單 🎉";
+        formMessage.style.color = "#168568";
       } catch (error) {
-        console.error("新增推薦失敗：", error);
-        showMessage(
-          "儲存失敗，請確認 Firestore 已建立並設定安全規則。",
-          true
-        );
+        console.error("儲存失敗：", error);
+        formMessage.textContent =
+          "儲存失敗，請檢查 Firebase 資料庫與安全規則設定。";
+        formMessage.style.color = "#d84c7d";
       } finally {
         submitBtn.disabled = false;
       }
     });
 
-    // 即時監聽雲端資料，其他訪客新增後也會更新。
     const restaurantsQuery = query(
       restaurantsRef,
       orderBy("createdAt", "desc")
     );
 
-    onSnapshot(restaurantsQuery, snapshot => {
-      const restaurants = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+    onSnapshot(
+      restaurantsQuery,
+      renderRestaurants,
+      (error) => {
+        console.error("讀取資料失敗：", error);
 
-      renderRestaurants(restaurants);
-      connectionStatus.textContent =
-        `雲端同步正常・共 ${restaurants.length} 則推薦`;
-    }, error => {
-      console.error("讀取推薦失敗：", error);
-      connectionStatus.textContent =
-        "目前無法讀取資料，請檢查資料庫設定與安全規則。";
-      foodList.replaceChildren();
+        restaurantList.replaceChildren();
 
-      const message = document.createElement("div");
-      message.className = "empty";
-      message.textContent = "資料載入失敗，請稍後再試。";
-      foodList.append(message);
-    });
+        const message = document.createElement("div");
+        message.className = "empty";
+        message.textContent =
+          "目前無法讀取美食名單，請確認 Firestore 已啟用且安全規則正確。";
+
+        restaurantList.appendChild(message);
+      }
+    );
   </script>
 </body>
 </html>
